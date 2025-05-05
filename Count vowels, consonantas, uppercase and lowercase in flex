@@ -1,0 +1,41 @@
+%{
+#include <stdio.h>
+#include <ctype.h>
+
+int vowels = 0;
+int consonants = 0;
+int uppercase = 0;
+int lowercase = 0;
+%}
+
+%%
+
+[aAeEiIoOuU]         {
+                        vowels++;
+                        if (isupper(yytext[0])) uppercase++;
+                        else if (islower(yytext[0])) lowercase++;
+                    }
+
+[b-df-hj-np-tv-zB-DF-HJ-NP-TV-Z] {
+                        consonants++;
+                        if (isupper(yytext[0])) uppercase++;
+                        else if (islower(yytext[0])) lowercase++;
+                    }
+
+.|\n                 ;  // Ignore all other characters
+
+%%
+
+int main() {
+    printf("Enter text (press Ctrl+D to end):\n");
+    yylex();
+    printf("\n--- Statistics ---\n");
+    printf("Vowels: %d\n", vowels);
+    printf("Consonants: %d\n", consonants);
+    printf("Uppercase letters: %d\n", uppercase);
+    printf("Lowercase letters: %d\n", lowercase);
+    return 0;
+}
+flex flex1.l
+gcc lex.yy.c -o flex1 -lfl
+ ./flex1
